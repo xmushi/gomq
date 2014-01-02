@@ -33,6 +33,6 @@ func Getjob(client redis.Client) (value [][]byte, err error) {
 	return value, nil
 }
 
-func FinishJob(client redis.Client, mqid int64) {
-
-}
+// func FinishJob(client redis.Client, mqid int64) {
+// 	client
+// }

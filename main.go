@@ -8,11 +8,12 @@ import (
 )
 
 func main() {
+	num := 4
 	numcpu := runtime.NumCPU() - 1
 	runtime.GOMAXPROCS(numcpu)
 
-	c := make(chan models.Mqbody)
-	for i := 0; i < numcpu; i++ {
+	c := make(chan models.Mqbody, num)
+	for i := 0; i < num; i++ {
 		go service.GoProcess(c, i)
 	}
 
