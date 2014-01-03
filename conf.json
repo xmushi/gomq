@@ -1,0 +1,7 @@
+{
+	"Workprocess":4,
+	"Redis_host":"192.168.33.11",
+	"Redis_port":16379,
+	"Redis_timeout":1000,
+	"Mysql_url":"root:jiagoubu123456@tcp(192.168.33.11:3306)/shimingtest"
+}
