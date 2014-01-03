@@ -34,7 +34,7 @@ func Process(job *models.Mqbody, db *sql.DB) (ret bool, err error) {
 	return true, nil
 }
 
-func GoProcess(c chan models.Mqbody, mysqlurl string, jobid int) {
+func GoProcess(c chan models.Mqbody, mysqlurl string, mqidc chan string, jobid int) {
 	db := Opendb(mysqlurl)
 	fmt.Println("jobid:", jobid)
 	for {
@@ -45,7 +45,7 @@ func GoProcess(c chan models.Mqbody, mysqlurl string, jobid int) {
 			}
 			_, e := Process(&v, db)
 			if e == nil {
-				fmt.Println(jobid, " process", v.Mqid)
+				mqidc <- v.Mqid
 			}
 		}
 	}

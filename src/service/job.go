@@ -1,14 +1,15 @@
 package service
 
 import (
+	"fmt"
 	"github.com/xmushi/Go-Redis"
 	"log"
 	"models"
-	"fmt"
 )
 
 const (
-	_KEY = "tv"
+	_KEY         = "tv"
+	_MQ_BODY_KEY = "mq"
 )
 
 var _REDIS_TIMEOUT = 0
@@ -25,7 +26,7 @@ func OpenRedis(conf models.MqConfig) (ret redis.Client, er error) {
 }
 
 func Getjob(client redis.Client) (value [][]byte, err error) {
-fmt.Println("hello")
+
 	value, err = client.Brpop(_KEY,
 		_REDIS_TIMEOUT)
 	if err != nil {
@@ -35,6 +36,17 @@ fmt.Println("hello")
 	return value, nil
 }
 
-func FinishJob(client redis.Client, mqid int64) {
-	// client
+/*
+ *删除redis里面备份的mq字段
+ */
+func FinishJob(conf models.MqConfig, c chan string) {
+	// client:=O
+	client, _ := OpenRedis(conf)
+	for {
+		v, ok := <-c
+		if ok {
+			fmt.Println(v)
+			client.Hdel(_MQ_BODY_KEY, v)
+		}
+	}
 }

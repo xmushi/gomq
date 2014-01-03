@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 type Mqbody struct {
 	Tv   string
-	Mqid int64
+	Mqid string
 	Msg  string
 }
 
@@ -24,7 +23,7 @@ func (this *Mqbody) Init(str string) {
 				old = idx + 1
 				i++
 			} else if i == 1 {
-				this.Mqid, _ = strconv.ParseInt(string(str[old:idx]), 10, 64)
+				this.Mqid = string(str[old:idx])
 				this.Msg = string(str[idx+1:])
 			}
 		}
@@ -33,6 +32,7 @@ func (this *Mqbody) Init(str string) {
 
 type MqConfig struct {
 	Workprocess   int
+	Go_no         int
 	Redis_host    string
 	Redis_port    int
 	Redis_timeout int

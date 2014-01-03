@@ -1,5 +1,6 @@
 {
 	"Workprocess":4,
+	"Go_no":50,
 	"Redis_host":"192.168.33.11",
 	"Redis_port":16379,
 	"Redis_timeout":1000,
