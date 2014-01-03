@@ -8,19 +8,21 @@ import (
 )
 
 func main() {
-	num := 4
-	numcpu := runtime.NumCPU() - 1
-	runtime.GOMAXPROCS(numcpu)
+	conf := models.MqConfig{}
+	conf.LoadConfig()
+
+	num := conf.Workprocess
+	runtime.GOMAXPROCS(conf.Workprocess)
 
 	c := make(chan models.Mqbody, num)
 	for i := 0; i < num; i++ {
-		go service.GoProcess(c, i)
+		go service.GoProcess(c, conf.Mysql_url, i)
 	}
 
-	fmt.Println("start ", numcpu, " jobs")
+	fmt.Println("start ", num, " jobs")
 
 	var mq models.Mqbody
-	client, _ := service.OpenRedis()
+	client, _ := service.OpenRedis(conf)
 	for {
 		value, e := service.Getjob(client)
 		if e == nil {

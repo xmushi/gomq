@@ -1,21 +1,21 @@
 package test
 
 import (
+	"fmt"
 	"models"
 	"service"
-	"testing"
+	// "testing"
 )
 
-func Test_testdb(t *testing.T) {
-	mq := models.Mqbody{}
-	mq.Init("tv1;123;aaaaa")
+// func Test_testdb(t *testing.T) {
+// 	mq := models.Mqbody{}
+// 	mq.Init("tv1;123;aaaaa")
 
-	db := service.Opendb()
+// }
 
-	_, e := service.Process(&mq, db)
-
-	if e != nil {
-		t.Error(e)
-	}
-
+func test_redis() {
+	conf := models.MqConfig{4, "192.168.33.11", 16379, 10000, "aa"}
+	client, _ := service.OpenRedis(conf)
+	client.Hdel("aa", "bb")
+	fmt.Println(client)
 }

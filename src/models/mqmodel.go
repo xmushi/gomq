@@ -1,8 +1,9 @@
 package models
 
 import (
-	// "fmt"
-	// "github.com/go-sql-driver/mysql"
+	"encoding/json"
+	"fmt"
+	"os"
 	"strconv"
 )
 
@@ -23,15 +24,32 @@ func (this *Mqbody) Init(str string) {
 				old = idx + 1
 				i++
 			} else if i == 1 {
-
 				this.Mqid, _ = strconv.ParseInt(string(str[old:idx]), 10, 64)
-
 				this.Msg = string(str[idx+1:])
 			}
 		}
 	}
 }
 
-func process() {
+type MqConfig struct {
+	Workprocess   int
+	Redis_host    string
+	Redis_port    int
+	Redis_timeout int
+	Mysql_url     string
+}
 
+func (this *MqConfig) LoadConfig() {
+	f, err := os.OpenFile("conf.json", os.O_APPEND|os.O_CREATE, os.ModeAppend)
+	if err != nil {
+		panic("error open conf.json")
+	}
+	defer f.Close()
+	buf := make([]byte, 1024)
+	n, _ := f.Read(buf)
+	err = json.Unmarshal(buf[:n], this)
+	if err != nil {
+		panic(err)
+		fmt.Println(err)
+	}
 }

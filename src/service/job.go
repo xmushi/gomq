@@ -1,20 +1,21 @@
 package service
 
 import (
-	"github.com/alphazero/Go-Redis"
+	"github.com/xmushi/Go-Redis"
 	"log"
+	"models"
+	"fmt"
 )
 
 const (
-	_KEY           = "tv"
-	_HOST          = "192.168.33.11"
-	_DB_INDEX      = 0
-	_REDIS_TIMEOUT = 1000
-	_REDIS_PORT    = 16379
+	_KEY = "tv"
 )
 
-func OpenRedis() (ret redis.Client, er error) {
-	spec := redis.DefaultSpec().Db(_DB_INDEX).Host(_HOST).Port(_REDIS_PORT)
+var _REDIS_TIMEOUT = 0
+
+func OpenRedis(conf models.MqConfig) (ret redis.Client, er error) {
+	_REDIS_TIMEOUT = conf.Redis_timeout
+	spec := redis.DefaultSpec().Db(conf.Redis_timeout).Host(conf.Redis_host).Port(conf.Redis_port).Db(0)
 	client, e := redis.NewSynchClientWithSpec(spec)
 	if e != nil {
 		log.Println("failed to create the client", e)
@@ -24,8 +25,9 @@ func OpenRedis() (ret redis.Client, er error) {
 }
 
 func Getjob(client redis.Client) (value [][]byte, err error) {
-
-	value, err = client.Brpop(_KEY, _REDIS_TIMEOUT)
+fmt.Println("hello")
+	value, err = client.Brpop(_KEY,
+		_REDIS_TIMEOUT)
 	if err != nil {
 		log.Println("error get key")
 		return nil, err
@@ -33,6 +35,6 @@ func Getjob(client redis.Client) (value [][]byte, err error) {
 	return value, nil
 }
 
-// func FinishJob(client redis.Client, mqid int64) {
-// 	client
-// }
+func FinishJob(client redis.Client, mqid int64) {
+	// client
+}

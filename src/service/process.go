@@ -8,12 +8,11 @@ import (
 )
 
 const (
-	_MYSQLURL   = "root:jiagoubu123456@tcp(192.168.33.11:3306)/shimingtest"
 	_INSERT_SQL = "insert into message_info(mq_id,tvname,content,create_time) values(?, ?, ?, NOW())"
 )
 
-func Opendb() *sql.DB {
-	db, err := sql.Open("mysql", _MYSQLURL)
+func Opendb(mysqlurl string) *sql.DB {
+	db, err := sql.Open("mysql", mysqlurl)
 	if err != nil {
 		//panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
 		fmt.Println(err.Error())
@@ -35,8 +34,8 @@ func Process(job *models.Mqbody, db *sql.DB) (ret bool, err error) {
 	return true, nil
 }
 
-func GoProcess(c chan models.Mqbody, jobid int) {
-	db := Opendb()
+func GoProcess(c chan models.Mqbody, mysqlurl string, jobid int) {
+	db := Opendb(mysqlurl)
 	fmt.Println("jobid:", jobid)
 	for {
 		select {
