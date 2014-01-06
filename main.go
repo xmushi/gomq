@@ -32,7 +32,6 @@ func main() {
 
 func getjob(conf models.MqConfig, c chan models.Mqbody) {
 	client, _ := service.OpenRedis(conf)
-
 	for {
 		value, e := service.Getjob(client)
 		if e == nil {
